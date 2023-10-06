@@ -1,0 +1,129 @@
+package com.recipeapi;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+
+public class Controller {
+
+    Image img;
+    String name, link;
+
+    @FXML
+    private Label recipeName;
+    @FXML
+    private ImageView imgV;
+
+    @FXML
+    private Hyperlink linkToRecipe;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
+    private TextField txtField;
+    @FXML
+    void initialize() {
+        linkToRecipe.setOnAction(this::openRecipeLink);
+    }
+
+    private void openRecipeLink(ActionEvent event) {
+        String url = linkToRecipe.getText();
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    void getRecipe(ActionEvent event) {
+        HttpURLConnection conn = null;
+        int responsecode = 0;
+        BufferedReader br;
+        StringBuilder strBuilder = new StringBuilder();
+
+        try {
+            String myUrl = "https://api.edamam.com/api/recipes/v2?type=public&beta=false&q="
+                    + txtField.getText() +
+                    "&app_id=a7cab5fb&app_key=06e2c24ca99233810f55eb57ef9c273e";
+
+            URL url = new URL(myUrl);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(6000);
+            conn.setReadTimeout(6000);
+
+            responsecode = conn.getResponseCode();
+            System.out.println("HttpResponseCode: " + responsecode);
+            if (responsecode >= 300) {
+                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            }
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                strBuilder.append(line);
+            }
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+
+        }
+        try {
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(strBuilder.toString());
+
+            JSONObject recipeObject = (JSONObject) ((JSONObject) ((JSONArray) jsonObject.get("hits")).get(0)).get("recipe");
+
+            String recipeImage = (String) recipeObject.get("image");
+            String recipeLabel = (String) recipeObject.get("label");
+            String recipeLink = (String) recipeObject.get("url");
+
+            link = recipeLink;
+            name = recipeLabel;
+            img = new Image(recipeImage);
+
+            displayRecipeInfo();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    private void displayRecipeInfo() {
+
+        imgV.setImage(img);
+
+        recipeName.setText(name);
+
+        linkToRecipe.setText(link);
+
+    }
+
+}
