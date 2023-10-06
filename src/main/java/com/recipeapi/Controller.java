@@ -1,11 +1,10 @@
 package com.recipeapi;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.json.simple.JSONArray;
@@ -21,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Random;
 
 
 public class Controller {
@@ -29,7 +29,7 @@ public class Controller {
     String name, link;
 
     @FXML
-    private Label recipeName;
+    private Label recipeName, selectedMealTypeLabel;
     @FXML
     private ImageView imgV;
 
@@ -42,7 +42,13 @@ public class Controller {
     @FXML
     private TextField txtField;
     @FXML
+    private ComboBox<String> mealTypeComboBox;
+    @FXML
     void initialize() {
+        ObservableList<String> mealTypes = FXCollections.observableArrayList("Breakfast", "Dinner", "Lunch", "Snack", "Desserts", "No Meal Type");
+
+        mealTypeComboBox.setItems(mealTypes);
+        searchButton.setOnAction(this::getRecipe);
         linkToRecipe.setOnAction(this::openRecipeLink);
     }
 
@@ -55,7 +61,6 @@ public class Controller {
         }
     }
 
-
     @FXML
     void getRecipe(ActionEvent event) {
         HttpURLConnection conn = null;
@@ -64,11 +69,10 @@ public class Controller {
         StringBuilder strBuilder = new StringBuilder();
 
         try {
-            String myUrl = "https://api.edamam.com/api/recipes/v2?type=public&beta=false&q="
-                    + txtField.getText() +
-                    "&app_id=a7cab5fb&app_key=06e2c24ca99233810f55eb57ef9c273e";
+            String selectedMealType = mealTypeComboBox.getValue();
+            String apiUrl = buildApiUrl(selectedMealType);
 
-            URL url = new URL(myUrl);
+            URL url = new URL(apiUrl);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(6000);
@@ -76,6 +80,7 @@ public class Controller {
 
             responsecode = conn.getResponseCode();
             System.out.println("HttpResponseCode: " + responsecode);
+            System.out.println(apiUrl);
             if (responsecode >= 300) {
                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
             } else {
@@ -94,28 +99,39 @@ public class Controller {
             if (conn != null) {
                 conn.disconnect();
             }
-
         }
         try {
+            Random random = new Random();
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(strBuilder.toString());
 
-            JSONObject recipeObject = (JSONObject) ((JSONObject) ((JSONArray) jsonObject.get("hits")).get(0)).get("recipe");
+            JSONObject recipeObject = (JSONObject) ((JSONObject) ((JSONArray) jsonObject.get("hits")).get(random.nextInt(19))).get("recipe");
 
-            String recipeImage = (String) recipeObject.get("image");
-            String recipeLabel = (String) recipeObject.get("label");
-            String recipeLink = (String) recipeObject.get("url");
-
-            link = recipeLink;
-            name = recipeLabel;
-            img = new Image(recipeImage);
+            link = (String) recipeObject.get("url");
+            name = (String) recipeObject.get("label");
+            img = new Image((String) recipeObject.get("image"));
 
             displayRecipeInfo();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
+
+    private String buildApiUrl(String type) {
+        String apiUrl = "https://api.edamam.com/api/recipes/v2?type=public&beta=false&q="
+                + txtField.getText() +
+                "&app_id=a7cab5fb&app_key=06e2c24ca99233810f55eb57ef9c273e";
+        if (type != null && !type.isEmpty()) {
+            if(type.equals("Desserts")) {
+                apiUrl += "&dishType=" + type;
+            } else {
+                apiUrl += "&mealType=" + type;
+            }
+        }
+        return apiUrl;
+    }
+
     private void displayRecipeInfo() {
 
         imgV.setImage(img);
@@ -123,7 +139,5 @@ public class Controller {
         recipeName.setText(name);
 
         linkToRecipe.setText(link);
-
     }
-
 }
