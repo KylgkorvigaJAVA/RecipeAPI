@@ -29,7 +29,7 @@ public class Controller {
     String name, link;
 
     @FXML
-    private Label recipeName, selectedMealTypeLabel;
+    private Label recipeName;
     @FXML
     private ImageView imgV;
 
@@ -45,7 +45,7 @@ public class Controller {
     private ComboBox<String> mealTypeComboBox;
     @FXML
     void initialize() {
-        ObservableList<String> mealTypes = FXCollections.observableArrayList("Breakfast", "Dinner", "Lunch", "Snack", "Desserts", "No Meal Type");
+        ObservableList<String> mealTypes = FXCollections.observableArrayList( "Breakfast", "Dinner", "Lunch", "Snack", "Desserts");
 
         mealTypeComboBox.setItems(mealTypes);
         searchButton.setOnAction(this::getRecipe);
@@ -70,7 +70,8 @@ public class Controller {
 
         try {
             String selectedMealType = mealTypeComboBox.getValue();
-            String apiUrl = buildApiUrl(selectedMealType);
+            String userInput = txtField.getText();
+            String apiUrl = buildApiUrl(selectedMealType, userInput);
 
             URL url = new URL(apiUrl);
             conn = (HttpURLConnection) url.openConnection();
@@ -118,9 +119,11 @@ public class Controller {
         }
     }
 
-    private String buildApiUrl(String type) {
+    private String buildApiUrl(String type, String userInput) {
+        String formattedUserInput = userInput.trim().replaceAll("\\s+", "%20");
+
         String apiUrl = "https://api.edamam.com/api/recipes/v2?type=public&beta=false&q="
-                + txtField.getText() +
+                + formattedUserInput +
                 "&app_id=a7cab5fb&app_key=06e2c24ca99233810f55eb57ef9c273e";
         if (type != null && !type.isEmpty()) {
             if(type.equals("Desserts")) {

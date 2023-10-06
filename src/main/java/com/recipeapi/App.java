@@ -10,7 +10,7 @@ public class App extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("recipeapi.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 700, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 651);
         stage.setTitle("RecipeAPI");
         stage.setResizable(false);
         stage.setScene(scene);
