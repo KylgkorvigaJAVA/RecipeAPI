@@ -3,6 +3,7 @@ module com.example.recipeapi {
     requires javafx.fxml;
     requires json.simple;
     requires java.desktop;
+    requires java.sql;
 
 
     opens com.recipeapi to javafx.fxml;

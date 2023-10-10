@@ -27,5 +27,6 @@
         <ImageView fx:id="imgV" fitHeight="253.0" fitWidth="273.0" layoutX="225.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true" />
         <Hyperlink fx:id="linkToRecipe" layoutX="229.0" layoutY="583.0" prefHeight="23.0" prefWidth="541.0" />
       <ComboBox fx:id="mealTypeComboBox" layoutX="555.0" layoutY="166.0" prefHeight="25.0" prefWidth="141.0" promptText="Select a meal type" />
+      <Button fx:id="saveButton" layoutX="427.0" layoutY="166.0" mnemonicParsing="false" onAction="#insertRecipe" prefHeight="25.0" prefWidth="52.0" text="Save" visible="false" />
     </children>
 </AnchorPane>

@@ -38,7 +38,8 @@ public class Controller {
 
     @FXML
     private Button searchButton;
-
+    @FXML
+    private Button saveButton;
     @FXML
     private TextField txtField;
     @FXML
@@ -62,11 +63,29 @@ public class Controller {
     }
 
     @FXML
+    void insertRecipe(ActionEvent event) {
+        RecipeDAO recipeDAO = new RecipeDAO();
+        Recipe recipe = new Recipe();
+        recipe.setSavedName(name);
+        recipe.setImageUrl(img.getUrl());
+        recipe.setSavedLink(link);
+
+        boolean saved = recipeDAO.insertRecipe(recipe);
+
+        if (saved) {
+            System.out.println("Recipe saved successfully");
+        } else {
+            System.out.println("Recipe could not be saved");
+        }
+    }
+
+    @FXML
     void getRecipe(ActionEvent event) {
         HttpURLConnection conn = null;
         int responsecode = 0;
         BufferedReader br;
         StringBuilder strBuilder = new StringBuilder();
+        saveButton.setVisible(true);
 
         try {
             String selectedMealType = mealTypeComboBox.getValue();
@@ -112,6 +131,7 @@ public class Controller {
             link = (String) recipeObject.get("url");
             name = (String) recipeObject.get("label");
             img = new Image((String) recipeObject.get("image"));
+
 
             displayRecipeInfo();
         } catch (ParseException e) {
