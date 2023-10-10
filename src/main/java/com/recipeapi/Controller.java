@@ -65,7 +65,7 @@ public class Controller {
     @FXML
     void insertRecipe(ActionEvent event) {
         RecipeDAO recipeDAO = new RecipeDAO();
-        Recipe recipe = new Recipe();
+        Recipe recipe = new Recipe(name, img.getUrl(), link);
         recipe.setSavedName(name);
         recipe.setImageUrl(img.getUrl());
         recipe.setSavedLink(link);
@@ -74,8 +74,14 @@ public class Controller {
 
         if (saved) {
             System.out.println("Recipe saved successfully");
+            System.out.println("Name: " + name);
+            System.out.println("Img: " + img.getUrl());
+            System.out.println("Link: " + link);
         } else {
             System.out.println("Recipe could not be saved");
+            System.out.println("Name: " + name);
+            System.out.println("Img: " + img.getUrl());
+            System.out.println("Link: " + link);
         }
     }
 

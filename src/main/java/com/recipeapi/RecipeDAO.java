@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+
 public class RecipeDAO {
-    private static final String INSERT_RECIPE_SQL = "INSERT INTO SAVED_RECIPES (name, imageUrl, link) VALUES (?, ?, ?)";
+    private static final String INSERT_RECIPE_SQL = "INSERT INTO SAVED_RECIPES (savedName, imageUrl, savedLink) VALUES (?, ?, ?)";
 
     public boolean insertRecipe(Recipe recipe) {
         try (Connection connection = DatabaseManager.getConnection();
