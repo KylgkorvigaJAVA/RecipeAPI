@@ -46,11 +46,13 @@ public class Controller {
     private ComboBox<String> mealTypeComboBox;
     @FXML
     void initialize() {
-        ObservableList<String> mealTypes = FXCollections.observableArrayList( "Breakfast", "Dinner", "Lunch", "Snack", "Desserts");
+        ObservableList<String> mealTypes = FXCollections.observableArrayList( "All", "Breakfast", "Lunch", "Dinner", "Snack", "Desserts");
 
         mealTypeComboBox.setItems(mealTypes);
+        mealTypeComboBox.getSelectionModel().selectFirst();
         searchButton.setOnAction(this::getRecipe);
         linkToRecipe.setOnAction(this::openRecipeLink);
+
     }
 
     private void openRecipeLink(ActionEvent event) {
@@ -146,19 +148,19 @@ public class Controller {
     }
 
     private String buildApiUrl(String type, String userInput) {
-        String formattedUserInput = userInput.trim().replaceAll("\\s+", "%20");
+        String formattedUserInput = userInput.trim().replaceAll("[,.\\s]+", "%20");
 
         String apiUrl = "https://api.edamam.com/api/recipes/v2?type=public&beta=false&q="
                 + formattedUserInput +
                 "&app_id=a7cab5fb&app_key=06e2c24ca99233810f55eb57ef9c273e";
-        if (type != null && !type.isEmpty()) {
+        if (!type.equals("All")) {
             if(type.equals("Desserts")) {
                 apiUrl += "&dishType=" + type;
             } else {
                 apiUrl += "&mealType=" + type;
             }
         }
-        return apiUrl;
+        return apiUrl + "&random=true";
     }
 
     private void displayRecipeInfo() {
