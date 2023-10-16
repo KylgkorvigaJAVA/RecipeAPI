@@ -6,9 +6,7 @@ public class Recipe {
     private String imageUrl;
     private String savedLink;
 
-//    public Recipe() {
-//
-//    }
+
 
     public Recipe(String savedName, String imageUrl, String savedLink) {
         this.savedName = savedName;
@@ -19,7 +17,6 @@ public class Recipe {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }

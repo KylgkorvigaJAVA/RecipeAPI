@@ -20,22 +20,28 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
 public class Controller {
 
-    Image img;
-    String name, link;
 
+    @FXML
+    private Label recipeNumber;
+    @FXML
+    private ImageView savedImgV;
+    @FXML
+    private Hyperlink savedLinkToRecipe;
+    @FXML
+    private Label savedRecipeName;
     @FXML
     private Label recipeName;
     @FXML
     private ImageView imgV;
-
     @FXML
     private Hyperlink linkToRecipe;
-
     @FXML
     private Button searchButton;
     @FXML
@@ -44,6 +50,79 @@ public class Controller {
     private TextField txtField;
     @FXML
     private ComboBox<String> mealTypeComboBox;
+
+    private RecipeDAO recipeDAO = new RecipeDAO();
+    List<Recipe> savedRecipes = new ArrayList<>();
+    int currentRecipeIndex = 0;
+    Image img;
+    String name, link;
+
+    @FXML
+    void deleteButtonClicked(ActionEvent event) {
+        int currentRecipeId = savedRecipes.get(currentRecipeIndex).getId();
+
+        boolean deleted = recipeDAO.deleteRecipe(currentRecipeId);
+
+        if(deleted) {
+            savedRecipes.remove(currentRecipeIndex);
+            if(!savedRecipes.isEmpty()) {
+                if(currentRecipeIndex >= savedRecipes.size()) {
+                    currentRecipeIndex = savedRecipes.size() - 1;
+                }
+                displaySavedRecipe(currentRecipeIndex);
+                System.out.println("Deleted Recipe ID: " + currentRecipeId);
+            } else {
+                System.out.println("No saved recipes!");
+            }
+        } else {
+            System.out.println("Recipe delete failed!");
+        }
+        refreshSavedRecipes();
+    }
+    @FXML
+    void forwardButtonClicked(ActionEvent event) {
+        if(currentRecipeIndex < savedRecipes.size() - 1) {
+            currentRecipeIndex++;
+            displaySavedRecipe(currentRecipeIndex);
+        }
+    }
+    @FXML
+    void backButtonClicked(ActionEvent event) {
+        if (currentRecipeIndex > 0) {
+            currentRecipeIndex--;
+        } else {
+            currentRecipeIndex = savedRecipes.size() - 1;
+        }
+        displaySavedRecipe(currentRecipeIndex);
+    }
+
+    public void refreshSavedRecipes() {
+        List<Recipe> updateSavedRecipes = recipeDAO.getAllSavedRecipes();
+        savedRecipes.clear();
+        savedRecipes.addAll(updateSavedRecipes);
+        currentRecipeIndex = 0;
+        displaySavedRecipe(currentRecipeIndex);
+    }
+    void displaySavedRecipe(int index) {
+        Recipe recipe = savedRecipes.get(index);
+
+        savedRecipeName.setText(recipe.getSavedName());
+        savedLinkToRecipe.setText(recipe.getSavedLink());
+        Image savedImage = new Image(recipe.getImageUrl());
+        savedImgV.setImage(savedImage);
+
+        recipeNumber.setText("Saved Recipe " + (index +1) + " of " + savedRecipes.size());
+
+        System.out.println("currentRecipeIndex: " + currentRecipeIndex);
+        System.out.println("Current Recipe ID: " + recipe.getId());
+    }
+
+    void initializeSavedRecipes() {
+        savedRecipes = recipeDAO.getAllSavedRecipes();
+
+        displaySavedRecipe(currentRecipeIndex);
+    }
+
     @FXML
     void initialize() {
         ObservableList<String> mealTypes = FXCollections.observableArrayList( "All", "Breakfast", "Lunch", "Dinner", "Snack", "Desserts");
@@ -52,7 +131,7 @@ public class Controller {
         mealTypeComboBox.getSelectionModel().selectFirst();
         searchButton.setOnAction(this::getRecipe);
         linkToRecipe.setOnAction(this::openRecipeLink);
-
+        initializeSavedRecipes();
     }
 
     private void openRecipeLink(ActionEvent event) {
@@ -66,19 +145,20 @@ public class Controller {
 
     @FXML
     void insertRecipe(ActionEvent event) {
-        RecipeDAO recipeDAO = new RecipeDAO();
         Recipe recipe = new Recipe(name, img.getUrl(), link);
         recipe.setSavedName(name);
         recipe.setImageUrl(img.getUrl());
         recipe.setSavedLink(link);
 
-        boolean saved = recipeDAO.insertRecipe(recipe);
 
-        if (saved) {
+        savedRecipes = recipeDAO.insertRecipe(recipe);
+
+        if (savedRecipes != null) {
             System.out.println("Recipe saved successfully");
             System.out.println("Name: " + name);
             System.out.println("Img: " + img.getUrl());
             System.out.println("Link: " + link);
+            refreshSavedRecipes();
         } else {
             System.out.println("Recipe could not be saved");
             System.out.println("Name: " + name);

@@ -12,13 +12,13 @@ public class DatabaseManager {
     private static Connection connection;
 
     static {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> closeConnection()));
+        Runtime.getRuntime().addShutdownHook(new Thread(DatabaseManager::closeConnection));
     }
 
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-            System.out.println("¤¤¤¤.");
+            System.out.println("DB connected!");
         }
         return connection;
     }

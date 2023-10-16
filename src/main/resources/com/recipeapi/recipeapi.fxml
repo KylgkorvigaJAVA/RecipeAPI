@@ -10,25 +10,35 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.HBox?>
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="651.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.recipeapi.Controller">
     <children>
-        <ImageView fx:id="bdImg" fitHeight="864.0" fitWidth="1382.0" layoutX="-165.0" layoutY="-19.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="864.0" fitWidth="1382.0" layoutX="-165.0" layoutY="-19.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../Images/BackgroundImage.jpg" />
             </image></ImageView>
         <Button fx:id="searchButton" layoutX="702.0" layoutY="166.0" mnemonicParsing="false" onAction="#getRecipe" text="Search" />
-        <Label fx:id="welcomeLabel" alignment="CENTER" blendMode="ADD" layoutX="371.0" layoutY="96.0" prefHeight="57.0" prefWidth="261.0" text="RecipeAPPI">
+        <Label alignment="CENTER" blendMode="ADD" layoutX="371.0" layoutY="96.0" prefHeight="57.0" prefWidth="261.0" text="RecipeAPPI">
             <font>
                 <Font name="Trebuchet MS Bold" size="49.0" />
             </font>
         </Label>
         <TextField fx:id="txtField" layoutX="289.0" layoutY="166.0" prefHeight="25.0" prefWidth="132.0" promptText="Enter an ingredient" />
-        <Label fx:id="recipeName" layoutX="228.0" layoutY="205.0" prefHeight="38.0" prefWidth="273.0" />
-        <ImageView fx:id="imgV" fitHeight="253.0" fitWidth="273.0" layoutX="225.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true" />
-        <Hyperlink fx:id="linkToRecipe" layoutX="229.0" layoutY="583.0" prefHeight="23.0" prefWidth="541.0" />
+        <Label fx:id="recipeName" layoutX="232.0" layoutY="268.0" prefHeight="38.0" prefWidth="273.0" />
+        <ImageView fx:id="imgV" fitHeight="253.0" fitWidth="273.0" layoutX="229.0" layoutY="306.0" pickOnBounds="true" preserveRatio="true" />
+        <Hyperlink fx:id="linkToRecipe" layoutX="229.0" layoutY="583.0" prefHeight="23.0" prefWidth="273.0" />
         <ComboBox fx:id="mealTypeComboBox" layoutX="594.0" layoutY="166.0" prefHeight="25.0" prefWidth="102.0" promptText="All" />
         <Button fx:id="saveButton" layoutX="427.0" layoutY="166.0" mnemonicParsing="false" onAction="#insertRecipe" prefHeight="25.0" prefWidth="52.0" text="Save" visible="false" />
       <Label layoutX="531.0" layoutY="168.0" prefHeight="20.0" prefWidth="82.0" text="Meal Type:" />
+      <Label fx:id="savedRecipeName" layoutX="521.0" layoutY="268.0" prefHeight="38.0" prefWidth="273.0" />
+      <ImageView fx:id="savedImgV" fitHeight="253.0" fitWidth="273.0" layoutX="518.0" layoutY="306.0" pickOnBounds="true" preserveRatio="true" />
+      <Hyperlink fx:id="savedLinkToRecipe" layoutX="518.0" layoutY="583.0" prefHeight="23.0" prefWidth="273.0" />
+      <Button layoutX="531.0" layoutY="200.0" mnemonicParsing="false" onAction="#backButtonClicked" prefHeight="25.0" prefWidth="34.0" text="←" />
+      <Button layoutX="702.0" layoutY="200.0" mnemonicParsing="false" onAction="#forwardButtonClicked" prefHeight="25.0" prefWidth="34.0" text="→" />
+      <Label fx:id="recipeNumber" layoutX="579.0" layoutY="204.0" prefHeight="17.0" prefWidth="116.0" />
+      <Button layoutX="754.0" layoutY="200.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="25.0" prefWidth="34.0" text="🗑">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
