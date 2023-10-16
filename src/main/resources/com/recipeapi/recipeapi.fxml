@@ -32,10 +32,10 @@
       <Label fx:id="savedRecipeName" layoutX="521.0" layoutY="268.0" prefHeight="38.0" prefWidth="273.0" />
       <ImageView fx:id="savedImgV" fitHeight="253.0" fitWidth="273.0" layoutX="518.0" layoutY="306.0" pickOnBounds="true" preserveRatio="true" />
       <Hyperlink fx:id="savedLinkToRecipe" layoutX="518.0" layoutY="583.0" prefHeight="23.0" prefWidth="273.0" />
-      <Button layoutX="531.0" layoutY="200.0" mnemonicParsing="false" onAction="#backButtonClicked" prefHeight="25.0" prefWidth="34.0" text="←" />
-      <Button layoutX="702.0" layoutY="200.0" mnemonicParsing="false" onAction="#forwardButtonClicked" prefHeight="25.0" prefWidth="34.0" text="→" />
+      <Button fx:id="backButton" layoutX="531.0" layoutY="200.0" mnemonicParsing="false" onAction="#backButtonClicked" prefHeight="25.0" prefWidth="34.0" text="←" />
+      <Button fx:id="forwardButton" layoutX="702.0" layoutY="200.0" mnemonicParsing="false" onAction="#forwardButtonClicked" prefHeight="25.0" prefWidth="34.0" text="→" />
       <Label fx:id="recipeNumber" layoutX="579.0" layoutY="204.0" prefHeight="17.0" prefWidth="116.0" />
-      <Button layoutX="754.0" layoutY="200.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="25.0" prefWidth="34.0" text="🗑">
+      <Button fx:id="deleteRecipeButton" layoutX="754.0" layoutY="200.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="25.0" prefWidth="34.0" text="🗑">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

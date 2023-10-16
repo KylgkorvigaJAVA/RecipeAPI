@@ -50,6 +50,15 @@ public class Controller {
     private TextField txtField;
     @FXML
     private ComboBox<String> mealTypeComboBox;
+    @FXML
+    private Button backButton;
+
+    @FXML
+    private Button deleteRecipeButton;
+
+    @FXML
+    private Button forwardButton;
+
 
     private RecipeDAO recipeDAO = new RecipeDAO();
     List<Recipe> savedRecipes = new ArrayList<>();
@@ -120,7 +129,24 @@ public class Controller {
     void initializeSavedRecipes() {
         savedRecipes = recipeDAO.getAllSavedRecipes();
 
-        displaySavedRecipe(currentRecipeIndex);
+        if(savedRecipes.isEmpty()) {
+            backButton.setVisible(false);
+            forwardButton.setVisible(false);
+            deleteRecipeButton.setVisible(false);
+            recipeNumber.setVisible(false);
+            savedImgV.setVisible(false);
+            savedLinkToRecipe.setVisible(false);
+            savedRecipeName.setVisible(false);
+        } else {
+            backButton.setVisible(true);
+            forwardButton.setVisible(true);
+            deleteRecipeButton.setVisible(true);
+            recipeNumber.setVisible(true);
+            savedImgV.setVisible(true);
+            savedLinkToRecipe.setVisible(true);
+            savedRecipeName.setVisible(true);
+            displaySavedRecipe(currentRecipeIndex);
+        }
     }
 
     @FXML
