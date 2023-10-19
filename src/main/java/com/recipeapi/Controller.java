@@ -176,7 +176,6 @@ public class Controller {
         recipe.setImageUrl(img.getUrl());
         recipe.setSavedLink(link);
 
-
         savedRecipes = recipeDAO.insertRecipe(recipe);
 
         if (savedRecipes != null) {
@@ -191,6 +190,7 @@ public class Controller {
             System.out.println("Img: " + img.getUrl());
             System.out.println("Link: " + link);
         }
+        initializeSavedRecipes();
     }
 
     @FXML
