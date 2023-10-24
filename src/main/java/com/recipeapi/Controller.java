@@ -74,6 +74,7 @@ public class Controller {
 
         if(deleted) {
             savedRecipes.remove(currentRecipeIndex);
+
             if(!savedRecipes.isEmpty()) {
                 if(currentRecipeIndex >= savedRecipes.size()) {
                     currentRecipeIndex = savedRecipes.size() - 1;
@@ -81,12 +82,20 @@ public class Controller {
                 displaySavedRecipe(currentRecipeIndex);
                 System.out.println("Deleted Recipe ID: " + currentRecipeId);
             } else {
-                System.out.println("No saved recipes!");
+                hideSavedRecipeUI();
             }
         } else {
             System.out.println("Recipe delete failed!");
         }
         refreshSavedRecipes();
+    }
+
+    void hideSavedRecipeUI() {
+        savedRecipeName.setText("");
+        savedLinkToRecipe.setText("");
+        savedImgV.setImage(null);
+        recipeNumber.setText("");
+        System.out.println("No saved recipes!");
     }
     @FXML
     void forwardButtonClicked(ActionEvent event) {
@@ -113,17 +122,19 @@ public class Controller {
         displaySavedRecipe(currentRecipeIndex);
     }
     void displaySavedRecipe(int index) {
-        Recipe recipe = savedRecipes.get(index);
+        if(!savedRecipes.isEmpty()) {
+            Recipe recipe = savedRecipes.get(index);
 
-        savedRecipeName.setText(recipe.getSavedName());
-        savedLinkToRecipe.setText(recipe.getSavedLink());
-        Image savedImage = new Image(recipe.getImageUrl());
-        savedImgV.setImage(savedImage);
+            savedRecipeName.setText(recipe.getSavedName());
+            savedLinkToRecipe.setText(recipe.getSavedLink());
+            Image savedImage = new Image(recipe.getImageUrl());
+            savedImgV.setImage(savedImage);
 
-        recipeNumber.setText("Saved Recipe " + (index +1) + " of " + savedRecipes.size());
+            recipeNumber.setText("Saved Recipe " + (index +1) + " of " + savedRecipes.size());
 
-        System.out.println("currentRecipeIndex: " + currentRecipeIndex);
-        System.out.println("Current Recipe ID: " + recipe.getId());
+            System.out.println("currentRecipeIndex: " + currentRecipeIndex);
+            System.out.println("Current Recipe ID: " + recipe.getId());
+        }
     }
 
     void initializeSavedRecipes() {
